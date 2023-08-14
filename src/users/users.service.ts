@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserInput, UpdateUserInput, UserQuery } from './dto';
+import { CreateUserInput, UpdateUserInput, UserArgs } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -12,17 +12,17 @@ export class UsersService {
     return await this.repository.save(user);
   }
 
-  async findAll(params: UserQuery): Promise<User[]> {
+  async findAll(params: UserArgs): Promise<User[]> {
     const queryBuilder = this.repository.createQueryBuilder('users');
     queryBuilder.take(params.take).skip(params.skip);
 
-    if (params.filter?.query) {
+    if (params?.filter.query) {
       queryBuilder
-        .where('users.name ILIKE %:name%', {
-          name: params.filter.query,
+        .where('users.name ILIKE :name', {
+          name: `%${params.filter.query}%`,
         })
-        .orWhere('users.username ILIKE %:username%', {
-          username: params.filter.query,
+        .orWhere('users.username ILIKE :username', {
+          username: `%${params.filter.query}%`,
         });
     }
     const { entities } = await queryBuilder.getRawAndEntities();

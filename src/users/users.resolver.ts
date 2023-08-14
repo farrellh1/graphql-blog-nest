@@ -3,7 +3,7 @@ import { UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { GqlAuthGuard } from 'src/guard';
-import { UpdateUserInput, UserQuery } from './dto';
+import { UpdateUserInput, UserArgs } from './dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -11,7 +11,7 @@ export class UsersResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [User], { name: 'users' })
-  async findAll(@Args() params: UserQuery) {
+  async findAll(@Args() params: UserArgs) {
     return await this.service.findAll(params);
   }
 

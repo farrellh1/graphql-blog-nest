@@ -39,8 +39,12 @@ type Auth {
 }
 
 type Query {
-  users: [User!]!
+  users(take: Float! = 10, skip: Float! = 0, filter: UserFilterArgs): [User!]!
   user(id: Int!): User!
+}
+
+input UserFilterArgs {
+  query: String
 }
 
 type Mutation {

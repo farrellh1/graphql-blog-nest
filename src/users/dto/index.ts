@@ -1,3 +1,3 @@
 export * from './create-user.input';
 export * from './update-user.input';
-export * from './filter-user.input';
+export * from './user.args';
