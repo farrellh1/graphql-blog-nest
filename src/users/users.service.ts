@@ -16,13 +16,13 @@ export class UsersService {
     const queryBuilder = this.repository.createQueryBuilder('users');
     queryBuilder.take(params.take).skip(params.skip);
 
-    if (params?.filter.query) {
+    if (params?.filter?.query) {
       queryBuilder
         .where('users.name ILIKE :name', {
-          name: `%${params.filter.query}%`,
+          name: `%${params.filter?.query}%`,
         })
         .orWhere('users.username ILIKE :username', {
-          username: `%${params.filter.query}%`,
+          username: `%${params.filter?.query}%`,
         });
     }
     const { entities } = await queryBuilder.getRawAndEntities();

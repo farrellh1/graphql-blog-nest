@@ -1,8 +1,6 @@
-import { ArgsType, Field, InputType, ObjectType } from '@nestjs/graphql';
+import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { IsOptional } from 'class-validator';
 import { PaginationArgs } from 'src/common';
-
-
 
 @InputType()
 export class UserFilterArgs {
