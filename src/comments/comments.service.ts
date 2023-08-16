@@ -34,8 +34,7 @@ export class CommentsService {
     queryBuilder.where('comments.postId = :postId', {
       postId: params.filter.postId,
     });
-    const { entities } = await queryBuilder.getRawAndEntities();
-    return entities;
+    return await queryBuilder.getMany();
   }
 
   async findOne(id: number): Promise<Comment> {

@@ -29,8 +29,7 @@ export class CategoriesService {
       });
     }
 
-    const { entities } = await queryBuilder.getRawAndEntities();
-    return entities;
+    return await queryBuilder.getMany();
   }
 
   async findMany(ids: number[]): Promise<Category[]> {
@@ -38,8 +37,7 @@ export class CategoriesService {
       .createQueryBuilder('categories')
       .whereInIds(ids);
 
-    const { entities } = await queryBuilder.getRawAndEntities();
-    return entities;
+    return await queryBuilder.getMany();
   }
 
   async findOne(id: number): Promise<Category> {

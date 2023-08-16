@@ -51,8 +51,7 @@ export class PostsService {
         });
       }
     }
-    const { entities } = await queryBuilder.getRawAndEntities();
-    return entities;
+    return await queryBuilder.getMany();
   }
 
   async findOne(id: number): Promise<Post> {

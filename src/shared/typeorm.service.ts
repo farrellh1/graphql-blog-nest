@@ -16,6 +16,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrationsTableName: 'typeorm_migrations',
       logger: 'file',
       synchronize: true,
+      cache: {
+        duration: 5000,
+      },
     };
   }
 }
