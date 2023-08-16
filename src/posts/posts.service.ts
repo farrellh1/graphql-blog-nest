@@ -44,7 +44,9 @@ export class PostsService {
   }
 
   async findOne(id: number): Promise<Post> {
-    return await this.repository.findOneByOrFail({ id });
+    const post = await this.repository.findOneByOrFail({ id });
+    post.readCount += 1;
+    return await this.repository.save(post);
   }
 
   async clap(id: number): Promise<Post> {
