@@ -14,7 +14,10 @@ export class UsersService {
 
   async findAll(params: UserArgs): Promise<User[]> {
     const queryBuilder = this.repository.createQueryBuilder('users');
-    queryBuilder.take(params.take).skip(params.skip);
+    queryBuilder
+      .take(params.take)
+      .skip(params.skip)
+      .orderBy(`users.${params.sortColumn}`, params.sortDirection);
 
     if (params?.filter?.query) {
       queryBuilder

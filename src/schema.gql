@@ -2,11 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  username: String!
-  name: String!
-  bio: String
+type Post {
+  id: Int!
+  title: String!
+  content: String!
+  readCount: Int!
+  clapCount: Int!
+  authorId: Int!
+  author: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -15,6 +18,16 @@ type User {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type User {
+  id: ID!
+  username: String!
+  name: String!
+  bio: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  posts: [Post!]
+}
 
 type Token {
   """JWT access token"""
@@ -39,12 +52,31 @@ type Auth {
 }
 
 type Query {
-  users(take: Float! = 10, skip: Float! = 0, filter: UserFilterArgs): [User!]!
+  users(take: Float! = 10, skip: Float! = 0, sortDirection: SortDirection! = DESC, sortColumn: String! = "id", filter: UserFilterArgs): [User!]!
   user(id: Int!): User!
+  posts(take: Float! = 10, skip: Float! = 0, sortDirection: SortDirection! = DESC, sortColumn: PostSortColumn! = ID, filter: PostFilterArgs): [Post!]!
+  post(id: Int!): Post!
+}
+
+enum SortDirection {
+  ASC
+  DESC
 }
 
 input UserFilterArgs {
   query: String
+}
+
+enum PostSortColumn {
+  ID
+  TITLE
+  CLAPCOUNT
+  READCOUNT
+}
+
+input PostFilterArgs {
+  query: String
+  authorId: Int
 }
 
 type Mutation {
@@ -52,6 +84,10 @@ type Mutation {
   signup(signUpInput: SignUpInput!): Auth!
   signIn(signInInput: SignInInput!): Auth!
   refreshToken(token: JWT!): Token!
+  createPost(createPostInput: CreatePostInput!): Post!
+  clap(id: Int!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post!
 }
 
 input UpdateUserInput {
@@ -71,4 +107,15 @@ input SignUpInput {
 input SignInInput {
   username: String!
   password: String!
+}
+
+input CreatePostInput {
+  title: String!
+  content: String!
+}
+
+input UpdatePostInput {
+  title: String
+  content: String
+  id: Int!
 }
