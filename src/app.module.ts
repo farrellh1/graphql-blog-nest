@@ -11,6 +11,7 @@ import { TypeOrmConfigService } from './shared/typeorm.service';
 import { ConfigModule } from '@nestjs/config';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CommentsModule } from './comments/comments.module';
     AuthModule,
     PostsModule,
     CommentsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

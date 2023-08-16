@@ -4,15 +4,27 @@ import { Post } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { CreatePostInput, PostArgs, UpdatePostInput } from './dto';
 import { User } from 'src/users/entities/user.entity';
+import { CategoriesService } from 'src/categories/categories.service';
 
 @Injectable()
 export class PostsService {
-  constructor(@InjectRepository(Post) private repository: Repository<Post>) {}
+  constructor(
+    @InjectRepository(Post) private repository: Repository<Post>,
+    private categoryService: CategoriesService,
+  ) {}
   async create(createPostInput: CreatePostInput, user: User) {
+    let categories = [];
+    if (createPostInput.categoryIds) {
+      categories = await this.categoryService.findMany(
+        createPostInput.categoryIds,
+      );
+    }
     const post = this.repository.create({
       ...createPostInput,
-      authorId: user.id,
+      author: user,
+      categories: categories,
     });
+    
     return await this.repository.save(post);
   }
 
@@ -63,6 +75,13 @@ export class PostsService {
     const post = await this.findOne(id);
     if (post.authorId != user.id) {
       throw new UnauthorizedException("Not allowed to edit other user's post");
+    }
+    let categories = [];
+    if (updatePostInput.categoryIds) {
+      categories = await this.categoryService.findMany(
+        updatePostInput.categoryIds,
+      );
+      post.categories = categories;
     }
     return await this.repository.save({ ...post, ...updatePostInput });
   }

@@ -1,27 +1,15 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  Int,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
 import { Post } from './entities/post.entity';
 import { CreatePostInput, PostArgs, UpdatePostInput } from './dto';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/guard';
 import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
 import { CurrentUser } from 'src/common/decorators';
 
 @Resolver(() => Post)
 export class PostsResolver {
-  constructor(
-    private readonly service: PostsService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly service: PostsService) {}
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Post)
@@ -66,10 +54,5 @@ export class PostsResolver {
     @CurrentUser() user: User,
   ): Promise<Post> {
     return this.service.remove(id, user);
-  }
-
-  @ResolveField('author', () => User)
-  async author(@Parent() post: Post): Promise<User> {
-    return this.usersService.findOne(post.authorId);
   }
 }

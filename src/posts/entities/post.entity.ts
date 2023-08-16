@@ -1,10 +1,13 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Category } from 'src/categories/entities/category.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -47,6 +50,11 @@ export class Post {
   @OneToMany(() => Comment, (comment) => comment.post)
   @Field(() => [Comment])
   comments: Comment[];
+
+  @ManyToMany(() => Category)
+  @JoinTable()
+  @Field(() => [Category])
+  categories: Category[];
 
   @CreateDateColumn()
   @Field()

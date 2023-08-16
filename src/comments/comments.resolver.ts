@@ -17,6 +17,8 @@ import { CommentArgs } from './dto';
 import { Post } from 'src/posts/entities/post.entity';
 import { PostsService } from 'src/posts/posts.service';
 import { UsersService } from 'src/users/users.service';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from 'src/guard';
 
 @Resolver(() => Comment)
 export class CommentsResolver {
@@ -26,24 +28,30 @@ export class CommentsResolver {
     private readonly usersService: UsersService,
   ) {}
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Comment)
   createComment(
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
     @CurrentUser() user: User,
   ): Promise<Comment> {
+    console.log(user);
+    
     return this.service.create(createCommentInput, user);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [Comment], { name: 'comments' })
   findAll(@Args() params: CommentArgs): Promise<Comment[]> {
     return this.service.findAll(params);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => Comment, { name: 'comment' })
   findOne(@Args('id', { type: () => Int }) id: number): Promise<Comment> {
     return this.service.findOne(id);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Comment)
   updateComment(
     @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
@@ -52,6 +60,7 @@ export class CommentsResolver {
     return this.service.update(updateCommentInput.id, updateCommentInput, user);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Comment)
   removeComment(
     @Args('id', { type: () => Int }) id: number,

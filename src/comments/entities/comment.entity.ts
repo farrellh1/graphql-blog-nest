@@ -32,14 +32,14 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments, {
     onDelete: 'CASCADE',
   })
-  @Field()
+  @Field(() => User)
   user: User;
 
   @ManyToOne(() => Post, (post) => post.comments, {
     onDelete: 'CASCADE',
   })
-  @Field()
-  post: User;
+  @Field(() => Post)
+  post: Post;
 
   @CreateDateColumn()
   @Field()
