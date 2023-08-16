@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -22,7 +21,6 @@ export class Category {
   name: string;
 
   @ManyToMany(() => Post)
-  @JoinTable()
   @Field(() => [Post])
   posts: Post[];
 
