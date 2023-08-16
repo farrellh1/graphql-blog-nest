@@ -61,12 +61,15 @@ export class PostsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Post)
-  removePost(@Args('id', { type: () => Int }) id: number): Promise<Post> {
-    return this.service.remove(id);
+  removePost(
+    @Args('id', { type: () => Int }) id: number,
+    @CurrentUser() user: User,
+  ): Promise<Post> {
+    return this.service.remove(id, user);
   }
 
   @ResolveField('author', () => User)
-  async author(@Parent() post: Post) {
+  async author(@Parent() post: Post): Promise<User> {
     return this.usersService.findOne(post.authorId);
   }
 }

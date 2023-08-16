@@ -1,52 +1,45 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Comment } from 'src/comments/entities/comment.entity';
+import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 @ObjectType()
-export class Post {
+export class Comment {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
   id: number;
 
   @Column()
   @Field()
-  title: string;
-
-  @Column()
-  @Field()
   content: string;
-
-  @Column({ default: 0 })
-  @Field(() => Int, { defaultValue: 0 })
-  readCount: number = 0;
-
-  @Column({ default: 0 })
-  @Field(() => Int, { defaultValue: 0 })
-  clapCount: number;
 
   @Column()
   @Field(() => Int)
-  authorId: number;
+  userId: number;
 
-  @ManyToOne(() => User, (user) => user.posts, {
+  @Column()
+  @Field(() => Int)
+  postId: number;
+
+  @ManyToOne(() => User, (user) => user.comments, {
     onDelete: 'CASCADE',
   })
-  @Field(() => User)
-  author: User;
+  @Field()
+  user: User;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
-  @Field(() => [Comment])
-  comments: Comment[];
+  @ManyToOne(() => Post, (post) => post.comments, {
+    onDelete: 'CASCADE',
+  })
+  @Field()
+  post: User;
 
   @CreateDateColumn()
   @Field()

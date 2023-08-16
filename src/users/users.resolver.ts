@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { GqlAuthGuard } from 'src/guard';
 import { UpdateUserInput, UserArgs } from './dto';
+import { CurrentUser } from 'src/common/decorators';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -23,7 +24,10 @@ export class UsersResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.service.update(updateUserInput.id, updateUserInput);
+  updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @CurrentUser() user: User,
+  ) {
+    return this.service.update(updateUserInput.id, updateUserInput, user);
   }
 }

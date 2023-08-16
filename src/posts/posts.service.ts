@@ -62,13 +62,16 @@ export class PostsService {
   ): Promise<Post> {
     const post = await this.findOne(id);
     if (post.authorId != user.id) {
-      throw new UnauthorizedException("Can't edit other user's post");
+      throw new UnauthorizedException("Not allowed to edit other user's post");
     }
     return await this.repository.save({ ...post, ...updatePostInput });
   }
 
-  async remove(id: number): Promise<Post> {
+  async remove(id: number, user: User): Promise<Post> {
     const post = await this.findOne(id);
+    if (post.authorId != user.id) {
+      throw new UnauthorizedException("Not allowed to edit other user's post");
+    }
     return await this.repository.remove(post);
   }
 }

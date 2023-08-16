@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -36,8 +36,17 @@ export class UsersService {
     return await this.repository.findOneByOrFail({ id });
   }
 
-  async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
+  async update(
+    id: number,
+    updateUserInput: UpdateUserInput,
+    currentUser: User,
+  ): Promise<User> {
     const user = await this.findOne(id);
+    if (user.id != currentUser.id) {
+      throw new UnauthorizedException(
+        "Not allowed to edit other user's profile",
+      );
+    }
     return await this.repository.save({ ...user, ...updateUserInput });
   }
 }
